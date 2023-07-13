@@ -92,47 +92,55 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="w-full flex">
-      <div className="w-1/2 min-h-screen p-4">
-        <Form method="post" onChange={handleChange}>
-          <h1 className="text-3xl font-bold underline mb-2">Settings</h1>
-          <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Name</span>
-            </label>
-            <input
-              type="text"
-              name="name"
-              defaultValue={values["name"]}
-              className={classNames(
-                "input input-bordered input-md w-full max-w-xs",
-                errors.name && "input-error"
-              )}
-            />
-            {errors.name && (
+    <>
+      <div className="w-full flex flex-nowrap">
+        <input
+          type="checkbox"
+          className="toggle toggle-primary absolute top-0 right-0 m-4 peer sm:hidden"
+        />
+        <div className="w-full shrink-0 sm:w-1/2 sm:shrink min-h-screen p-4 peer-checked:hidden">
+          <Form method="post" onChange={handleChange}>
+            <h1 className="text-3xl font-bold underline mb-2">Settings</h1>
+            <div className="form-control w-full max-w-xs">
               <label className="label">
-                <span className="label-text-alt">
-                  <span className="text-error">{errors.name.concat(" ")}</span>
-                </span>
+                <span className="label-text">Name</span>
               </label>
-            )}
-          </div>
-        </Form>
-      </div>
-      <div ref={ref} className="w-1/2 min-h-screen border-l-2">
-        <Frame title="preview-iframe" className="w-full h-full">
-          {cssLink && <link rel="stylesheet" href={cssLink.href} />}
-          <div className="w-full h-full  p-4">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold">
-              Hello {values["name"]}!👋
-            </h2>
-            <div className="absolute bottom-0 right-0 p-4 bg-slate-700">
-              {dimensions.width} x {dimensions.height}
-              {breakpoint !== undefined && `(${breakpoint})`}
+              <input
+                type="text"
+                name="name"
+                defaultValue={values["name"]}
+                className={classNames(
+                  "input input-bordered input-md w-full max-w-xs",
+                  errors.name && "input-error"
+                )}
+              />
+              {errors.name && (
+                <label className="label">
+                  <span className="label-text-alt">
+                    <span className="text-error">
+                      {errors.name.concat(" ")}
+                    </span>
+                  </span>
+                </label>
+              )}
             </div>
-          </div>
-        </Frame>
+          </Form>
+        </div>
+        <div ref={ref} className="w-full sm:w-1/2 min-h-screen sm:border-l-2">
+          <Frame title="preview-iframe" className="w-full h-full">
+            {cssLink && <link rel="stylesheet" href={cssLink.href} />}
+            <div className="w-full h-full p-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold">
+                Hello {values["name"]}!👋
+              </h2>
+              <div className="absolute bottom-0 right-0 p-4 bg-slate-700">
+                {dimensions.width} x {dimensions.height}
+                {breakpoint !== undefined && `(${breakpoint})`}
+              </div>
+            </div>
+          </Frame>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
