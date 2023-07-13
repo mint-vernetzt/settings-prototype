@@ -7,12 +7,14 @@ import Frame from "~/components/Frame";
 
 const schema = z.object({
   name: z.string().min(1).max(50),
+  status: z.string().optional(),
 });
 
 type Schema = z.infer<typeof schema>;
 
 const defaults: Schema = {
   name: "Jon Doe",
+  status: undefined,
 };
 
 export function headers({
@@ -48,6 +50,7 @@ export default function Index() {
   const [breakpoint, setBreakpoint] = React.useState<
     "sm" | "md" | "lg" | "xl" | "2xl" | undefined
   >();
+  const [scrollTarget, setScrollTarget] = React.useState<string | null>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLFormElement>) => {
     const updatedValues = {
@@ -58,6 +61,23 @@ export default function Index() {
     if (result.success) {
       setValues(updatedValues);
       setErrors({});
+
+      if (scrollTarget !== event.target.name) {
+        setScrollTarget(event.target.name);
+        const preview = document.getElementById("preview") as HTMLIFrameElement;
+        const previewDocument = preview.contentDocument;
+        const previewWindow = preview.contentWindow;
+
+        if (previewDocument !== null && previewWindow !== null) {
+          const element = previewDocument.getElementById(event.target.name);
+          if (element !== null) {
+            const box = element.getBoundingClientRect();
+
+            const y = previewWindow.scrollY + box.y - 16; // weird offset
+            previewWindow.scrollTo({ top: y, left: 0, behavior: "smooth" });
+          }
+        }
+      }
     } else {
       setErrors(result.error.formErrors.fieldErrors);
     }
@@ -78,7 +98,6 @@ export default function Index() {
 
   React.useEffect(() => {
     function resizeHandler() {
-      console.log("resizeHandler");
       if (ref.current) {
         const { width, height } = ref.current.getBoundingClientRect();
         setDimensions({ width, height });
@@ -140,17 +159,53 @@ export default function Index() {
                   </span>
                 </label>
               )}
+              <label className="label">
+                <span className="label-text">Status</span>
+              </label>
+              <input
+                type="text"
+                name="status"
+                defaultValue={values["status"]}
+                className={classNames(
+                  "input input-bordered input-md w-full max-w-xs",
+                  errors.status && "input-error"
+                )}
+              />
+              {errors.status && (
+                <label className="label">
+                  <span className="label-text-alt">
+                    <span className="text-error">
+                      {errors.status.concat(" ")}
+                    </span>
+                  </span>
+                </label>
+              )}
             </div>
           </Form>
         </div>
         <div ref={ref} className="w-full sm:w-1/2 min-h-screen sm:border-l-2">
-          <Frame title="preview-iframe" className="w-full h-full">
+          <Frame
+            id="preview"
+            title="preview-iframe"
+            className="w-full h-full overflow-hidden border-0"
+          >
             {cssLink && <link rel="stylesheet" href={cssLink.href} />}
-            <div className="w-full h-full p-4">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold">
+            <div className="relative w-full h-full p-4">
+              <h2
+                id="name"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold"
+              >
                 Hello {values["name"]}!👋
               </h2>
-              <div className="absolute bottom-0 right-0 p-4 bg-slate-700">
+              <div className="h-[80%] my-4 border-y-2"></div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold">
+                Status
+              </h3>
+              <p id="status" className="">
+                {values["status"] || "nothing to see here..."}
+              </p>
+              <div className="h-[80%] my-4 border-y-2"></div>
+              <div className="fixed bottom-0 right-0 p-4 bg-slate-700 opacity-80">
                 {dimensions.width} x {dimensions.height}
                 {breakpoint !== undefined && `(${breakpoint})`}
               </div>
