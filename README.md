@@ -1,6 +1,33 @@
 # Welcome to Remix!
 
 - [Remix Docs](https://remix.run/docs)
+- [Netlify Functions Overview](https://docs.netlify.com/functions/overview)
+
+## Netlify Setup
+
+1. Install the [Netlify CLI](https://docs.netlify.com/cli/get-started/):
+
+```sh
+npm i -g netlify-cli
+```
+
+If you have previously installed the Netlify CLI, you should update it to the latest version:
+
+```sh
+npm i -g netlify-cli@latest
+```
+
+2. Sign up and log in to Netlify:
+
+```sh
+netlify login
+```
+
+3. Create a new site:
+
+```sh
+netlify init
+```
 
 ## Development
 
