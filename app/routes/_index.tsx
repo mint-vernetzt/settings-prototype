@@ -146,7 +146,7 @@ export default function Index() {
                 name="name"
                 defaultValue={values["name"]}
                 className={classNames(
-                  "input input-bordered input-md w-full max-w-xs",
+                  "input input-bordered input-md w-full max-w-xs text-base",
                   errors.name && "input-error"
                 )}
               />
@@ -167,7 +167,7 @@ export default function Index() {
                 name="status"
                 defaultValue={values["status"]}
                 className={classNames(
-                  "input input-bordered input-md w-full max-w-xs",
+                  "input input-bordered input-md w-full max-w-xs text-base",
                   errors.status && "input-error"
                 )}
               />
